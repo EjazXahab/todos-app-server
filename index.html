@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js"></script>
+    
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>todo app with server</h1>
+
+    <form onsubmit="postTodo(); return false;">
+        todo: <input type="text" name="todo" id="todo">
+        <button type="submit">Add</button>
+    </form>
+    <button onclick="getAllTodos()">Refresh</button>
+    <h1 id="result"></h1>
+  
+
+    <script>
+
+        
+        function postTodo() {
+            let todoText = document.querySelector("#todo").value;
+
+            axios.post(`http://localhost:3000/todo`, {
+                text: todoText
+            })
+            .then(function (response) {
+                console.log(response.data);
+                document.querySelector("#result").innerHTML = "";
+                response.data.data.map(eachTodo => {
+                    document.querySelector("#result").innerHTML += eachTodo; // Display the 'text' property of each todo
+                    document.querySelector("#result").innerHTML += '<br>';
+                });
+
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        };
+
+       function getAllTodos(){
+        axios.get(`http://localhost:3000/todos`)
+            .then(function (response) {
+                console.log(response.data);
+                document.querySelector("#result").innerHTML = "";
+                response.data.data.map(eachTodo => {
+                    document.querySelector("#result").innerHTML += eachTodo; // Display the 'text' property of each todo
+                    document.querySelector("#result").innerHTML += '<br>';
+                });
+
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+       }
+       getAllTodos();
+         
+
+       setInterval(getAllTodos, 5000);
+    </script>
+   <script type="module" src="app.mjs"></script>
+</body>
+
+</html>
